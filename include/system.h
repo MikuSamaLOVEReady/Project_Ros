@@ -14,14 +14,10 @@ namespace uwb_slam{
         System() {
             Mapping_ = new Mapping();
         }
-        void Run(){
-    
-            Uwb_->Serread( *Uwb_);
-            std::cout<<Uwb_->x<<std::endl;
-        };
+        void Run();
     public:
         Mapping* Mapping_;
-        Uwb* Uwb_;
+        Uwb* Uwb_ ;
 
     };
 }

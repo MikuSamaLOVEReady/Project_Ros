@@ -18,12 +18,12 @@ namespace uwb_slam{
         void Run();
         bool checknewdata();
         void feed_imu_odom_pose_data();
-        void Serread( Uwb &Uwb_);
+        void Serread();
 
  
    public:
     
-    float x, y, theta, d;
+    float x, y, theta, distance;
     // std::queue<Imu_odom_pose_data> v_buffer_imu_odom_pose_data_;
 
     std::mutex mMutexUwb;

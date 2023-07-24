@@ -7,6 +7,8 @@ int main()
     uwb_slam::System* system = new uwb_slam::System();
 
     uwb_slam::Mapping* mp = new uwb_slam::Mapping();
+
+    system->Uwb_ = new uwb_slam::Uwb();
     // system->Mapping_->Run();
     system->Run();
    

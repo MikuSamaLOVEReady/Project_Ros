@@ -4,17 +4,17 @@
 
 namespace uwb_slam{
 
-    /*
+    
     void System::Run()
     {
         
-        ros->imu->odom
+        // ros->imu->odom
        
 
     //    std::thread(&,run,);
-    
-        Uwb_->Serread( *Uwb_);
+        Uwb_->Serread();
+        std::cout<<"s"<<std::endl;
         std::cout<<Uwb_->x<<std::endl;
     }
-    */
+    
 }
