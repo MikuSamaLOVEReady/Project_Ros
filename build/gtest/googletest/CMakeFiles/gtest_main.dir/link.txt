@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC   -shared -Wl,-soname,libgtest_main.so -o ../lib/libgtest_main.so CMakeFiles/gtest_main.dir/src/gtest_main.cc.o  -Wl,-rpath,/home/luoruidi/Desktop/ros_learn/C++_Merge_Ros/merge_ros/build/gtest/lib ../lib/libgtest.so -lpthread 
