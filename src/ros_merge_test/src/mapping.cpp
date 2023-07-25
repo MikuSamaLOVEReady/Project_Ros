@@ -11,7 +11,7 @@ namespace uwb_slam
         std::unique_lock<std::mutex> lock(mMutexMap);
         return !mv_uwb_point_.empty();
     }
-    
+
     void Mapping::feed_uwb_data(const cv::Point2d & data)
     {
             std::unique_lock<std::mutex> lock(mMutexMap);
@@ -31,8 +31,8 @@ namespace uwb_slam
         int pix_x = cur_point.x / PIXEL_SCALE + ( fmod(cur_point.x ,PIXEL_SCALE) != 0);
         int pix_y = cur_point.y / PIXEL_SCALE + ( fmod(cur_point.y ,PIXEL_SCALE) != 0);
 
-        img.at<unsigned char>(pix_x,pix_y)= 0;
-
+        img.at<unsigned char>(pix_y,pix_x)= 0;
+        cv::imshow("Image",img);
     }
 
 
@@ -47,29 +47,47 @@ namespace uwb_slam
         img = cv::Mat(realHeight, realWidth, CV_8UC1, cv::Scalar(255,255,255));
         cv::imshow("Image",img);
 
+        /*
         std::cout << "waiting" <<std::endl;
         int key = cv::waitKey(0);
-
         if (key == 'q' || key == 27) {
             this->feed_uwb_data(cv::Point2d(uwb_->x,uwb_->y));
             read_uwb_ = true;
             std::cout << "non" << key << std::endl;
-                 //cv::destroyAllWindows();
+            cv::destroyAllWindows();
          }
-
-        //std::cout << "non" << key << std::endl;
-        while( read_uwb_ )//按下空格键
-        {
-            //uwb xieru 
-            std::cout << "anxia " << std::endl;
-
-            if(check_uwb_point())
-            {
-                process();
+        */
+        while(1){
+            int key = cv::waitKey(0);
+            if (key == 'q' ) {
+                read_uwb_ = true;
+                //std::cout << "non" << key << std::endl;
+                //cv::destroyAllWindows();
             }
-            if(cv::waitKey(0)  == 27)//按下esc键
-                read_uwb_ = false;
+            //std::cout << "non" << key << std::endl;
+            while( read_uwb_ )//按下空格键
+            {
+                int key2 = cv::waitKey(1);
+                if (key2 == 'q' ) {
+                    //TODO: save
+                  read_uwb_ = false;
+                  break;
+                }
+
+                this->feed_uwb_data(cv::Point2d(abs(uwb_->x) * 100,abs(uwb_->y)*100));
+                //uwb xieru
+                std::cout << "anxia " << std::endl;
+
+                if(check_uwb_point())
+                {
+                    process();
+                }
+            }
+            std::cout << "out" << key << std::endl;
+
         }
+
+
 
         //std::string pngimage="../Map/pngimage.png";//保存的图片文件路径
         //cv::imwrite(pngimage,img);

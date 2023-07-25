@@ -8,30 +8,43 @@
 #include "senddata.h"
 
 
+
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "locate_info_pub_node"); // Initialize the ROS node
     ros::NodeHandle nh;
 
+
     std::cout << "woc" << std::endl;
     uwb_slam::System* system = new uwb_slam::System();
     uwb_slam::Mapping* mp = new uwb_slam::Mapping();
+    uwb_slam::Uwb*  uwb = new uwb_slam::Uwb();
+    uwb_slam::Senddata* sender = new uwb_slam::Senddata();
 
-    system->Uwb_ = new uwb_slam::Uwb();
-    mp->uwb_ = system->Uwb_;
+    system->Mapping_ = mp;
+    system->Mapping_->uwb_ = uwb;
+    system->Uwb_  = uwb;
+    system->Sender_ = sender;
+
+    //mp->uwb_ = system->Uwb_;
 
 
-    // system->Mapping_->Run();
+    //  control data fllow in system
     std::thread rose_trd ([&system]() {
         system->Run();
     });
+    // uwb serried read
+    std::thread uwb_trd([&uwb]() {
+        uwb->Run();
+    });
+    // build map
     std::thread map_trd ([&mp]() {
         mp->Run();
     });
 
-
-
-    //
+    std::thread sender_trd ([&sender, uwb]() {
+        sender->Run(uwb);
+    });
 
     ros::spin(); // Start the ROS node's main loop
     //System->run()

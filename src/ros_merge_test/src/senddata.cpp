@@ -3,12 +3,27 @@
 
 namespace uwb_slam
 {
+    void Senddata::Run(Uwb* uwb){
+
+        ros::Rate loop_rate(10);
+        odom_pub_=nh.advertise<nav_msgs::Odometry>("odom",50);
+        while(ros::ok()){
+            std::cout<< "rui" <<std::endl;
+            publishOdometry(uwb);
+            ros::spinOnce();
+            loop_rate.sleep();
+        }
+
+
+    }
+
     void Senddata::publishOdometry(uwb_slam::Uwb *uwb)
     {
+        std::cout << "LLL" << std::endl;
+
         std::mutex mMutexSend;
         ros::Time current_time = ros::Time::now();
 
-        odom_pub_=nh.advertise<nav_msgs::Odometry>("odom",50);
         // 设置 Odometry 消息的头部信息
         odom.header.stamp = current_time;
         odom.header.frame_id = "map";  // 设置坐标系为 "map"

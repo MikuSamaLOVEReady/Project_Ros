@@ -13,14 +13,12 @@ namespace uwb_slam{
 
     public:
         System() {
-            Mapping_ = new Mapping();
         }
         void Run();
     public:
         Mapping* Mapping_;
         Uwb* Uwb_ ;
-        Senddata* Senddata_;
-
+        Senddata* Sender_;
     };
 }
 #endif

@@ -5,40 +5,22 @@
 
 namespace uwb_slam{
 
+    //
     Uwb::Uwb() {
 
     }
 
-    // bool Uwb::checknewdata()
-    // {
-    //     std::unique_lock<std::mutex> lock(mMutexUwb);
-    //     return !v_buffer_imu_odom_pose_data_.empty();
-    // }
+    void Uwb::Run() {
 
-    // void Uwb::Run() {
-    //     while(1)
-    //     {
-    //         if(checknewdata())
-    //         {
-    //             {
-    //                 std::unique_lock<std::mutex> lock(mMutexUwb);
-    //                 Imu_odom_pose_data imu_odom_pose_data = v_buffer_imu_odom_pose_data_.front();
-    //                 v_buffer_imu_odom_pose_data_.pop();
-    //             }
+        while(1){
+            this->Serread();
+           // std::cout<<"s"<<std::endl;
+           // std::cout<<this->x<<std::endl;
+        }
 
 
+    }
 
-    //         }
-    //     }
-
-
-
-    // }
-
-    // void Uwb::feed_imu_odom_pose_data(const Imu_odom_pose_data& imu_odom_pose_data){
-    //     std::unique_lock<std::mutex> lock(mMutexUwb);
-    //     v_buffer_imu_odom_pose_data_.push(imu_odom_pose_data);
-    // }
 
     void Uwb::Serread(){
         try {
@@ -82,4 +64,35 @@ namespace uwb_slam{
 
 
 };
+
+// bool Uwb::checknewdata()
+// {
+//     std::unique_lock<std::mutex> lock(mMutexUwb);
+//     return !v_buffer_imu_odom_pose_data_.empty();
+// }
+
+// void Uwb::Run() {
+//     while(1)
+//     {
+//         if(checknewdata())
+//         {
+//             {
+//                 std::unique_lock<std::mutex> lock(mMutexUwb);
+//                 Imu_odom_pose_data imu_odom_pose_data = v_buffer_imu_odom_pose_data_.front();
+//                 v_buffer_imu_odom_pose_data_.pop();
+//             }
+
+
+
+//         }
+//     }
+
+
+
+// }
+
+// void Uwb::feed_imu_odom_pose_data(const Imu_odom_pose_data& imu_odom_pose_data){
+//     std::unique_lock<std::mutex> lock(mMutexUwb);
+//     v_buffer_imu_odom_pose_data_.push(imu_odom_pose_data);
+// }
 

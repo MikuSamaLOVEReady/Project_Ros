@@ -22,7 +22,7 @@ namespace uwb_slam{
         Read_sensor_data();
 
         void Run(int argc, char* argv[]);
-        void set_uwb(Uwb * uwb);
+        //void set_uwb(Uwb * uwb);
         void imu_call_back(const ImuConstPtr& imu);
         void odom_call_back(const OdomConstPtr& odom);
 

@@ -2,10 +2,8 @@
 
 namespace uwb_slam {
 
-    void Read_sensor_data::set_uwb(Uwb * uwb)
-    {
-        this->uwb_ = uwb;
-    }
+
+    //void Read_sensor_data::set_uwb(){}
 
 
     void Read_sensor_data::imu_call_back(const ImuConstPtr& imu){

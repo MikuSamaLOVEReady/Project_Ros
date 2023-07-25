@@ -14,8 +14,9 @@ namespace uwb_slam{
     class Senddata
     {
         public:
-        Senddata();
+        Senddata(){};
         void publishOdometry( Uwb* uwb);
+        void Run(Uwb* uwb);
 
 
         std::mutex mMutexSend;

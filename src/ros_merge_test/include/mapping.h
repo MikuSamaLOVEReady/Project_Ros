@@ -16,16 +16,14 @@ namespace uwb_slam{
         Mapping() {};
         void Run();
         bool check_uwb_point();
-        void feed_uwb_data(Uwb* uwb);
+        void feed_uwb_data(const cv::Point2d & data);
         void process();
         std::mutex mMutexMap;
         Uwb* uwb_;
 
         private:
         std::queue<cv::Point2d> mv_uwb_point_;
-
         bool read_uwb_ = false;
-
         cv::Mat img;
         cv::Point2d cur_point = {-1,-1};
 
