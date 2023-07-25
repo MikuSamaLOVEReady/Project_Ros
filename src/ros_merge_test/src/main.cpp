@@ -1,7 +1,11 @@
 #include "../include/system.h"
 #include "../include/uwb.h"
-#include "senddata.h"
 
+
+#include <iostream>
+#include <ros/ros.h>
+#include <thread>
+#include "senddata.h"
 
 
 int main(int argc, char** argv)
@@ -11,12 +15,23 @@ int main(int argc, char** argv)
 
     std::cout << "woc" << std::endl;
     uwb_slam::System* system = new uwb_slam::System();
-
     uwb_slam::Mapping* mp = new uwb_slam::Mapping();
 
     system->Uwb_ = new uwb_slam::Uwb();
+    mp->uwb_ = system->Uwb_;
+
+
     // system->Mapping_->Run();
-    system->Run();
+    std::thread rose_trd ([&system]() {
+        system->Run();
+    });
+    std::thread map_trd ([&mp]() {
+        mp->Run();
+    });
+
+
+
+    //
 
     ros::spin(); // Start the ROS node's main loop
     //System->run()
