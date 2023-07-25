@@ -5,6 +5,7 @@
 #include <string>
 #include "mapping.h"
 #include "uwb.h"
+#include "senddata.h"
 #include <iostream>
 
 namespace uwb_slam{
@@ -18,6 +19,7 @@ namespace uwb_slam{
     public:
         Mapping* Mapping_;
         Uwb* Uwb_ ;
+        Senddata* Senddata_;
 
     };
 }

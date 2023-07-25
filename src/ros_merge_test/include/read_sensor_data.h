@@ -29,8 +29,6 @@ namespace uwb_slam{
         private:
         ros::Subscriber imu_sub_;
         ros::Subscriber odom_sub_;
-
-        Uwb* uwb_;
     };
 }
 #endif

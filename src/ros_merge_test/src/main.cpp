@@ -1,11 +1,12 @@
 #include "../include/system.h"
 #include "../include/uwb.h"
-#include <iostream>
-#include <ros/ros.h>
+#include "senddata.h"
+
+
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "ros_merge_test_node"); // Initialize the ROS node
+    ros::init(argc, argv, "locate_info_pub_node"); // Initialize the ROS node
     ros::NodeHandle nh;
 
     std::cout << "woc" << std::endl;

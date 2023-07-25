@@ -13,8 +13,8 @@ namespace uwb_slam{
 
     //    std::thread(&,run,);
         Uwb_->Serread();
-        std::cout<<"s"<<std::endl;
-        std::cout<<Uwb_->x<<std::endl;
+        Mapping_->feed_uwb_data(Uwb_);
+        Senddata_->publishOdometry(Uwb_);
     }
     
 }

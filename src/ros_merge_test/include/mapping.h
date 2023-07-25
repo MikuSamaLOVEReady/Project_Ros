@@ -15,7 +15,7 @@ namespace uwb_slam{
         Mapping() {};
         void Run();
         bool check_uwb_point();
-        void feed_uwb_data(const cv::Point2d & data);
+        void feed_uwb_data(Uwb* uwb);
         void process();
 
 
@@ -23,7 +23,6 @@ namespace uwb_slam{
 
         private:
         std::queue<cv::Point2d> mv_uwb_point_;
-        Uwb* uwb_;
         cv::Mat img;
 
     };

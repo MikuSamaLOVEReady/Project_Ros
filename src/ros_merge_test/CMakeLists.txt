@@ -33,7 +33,7 @@ add_library(${PROJECT_NAME} SHARED
         src/mapping.cpp
         src/align.cpp
         src/read_sensor_data.cpp
-        )
+        include/senddata.h src/senddata.cpp)
 
 add_executable(${PROJECT_NAME}_node src/main.cpp)
 

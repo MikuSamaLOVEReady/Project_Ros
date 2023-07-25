@@ -63,6 +63,7 @@ namespace uwb_slam{
         memcpy(&this->theta, &tmpdata[7], sizeof(theta));
         this->x = cosf(theta/180*PI)*distance;
         this->y = sinf(theta/180*PI)*distance;
+        this->theta = theta;
         std::cout << "PI: " << PI << std::endl;
         std::cout << "theta: " << theta << " distance: " << distance << std::endl;
         std::cout << "x: " << x << " y: " << y << std::endl;
