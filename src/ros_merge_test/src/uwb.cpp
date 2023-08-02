@@ -14,21 +14,7 @@ namespace uwb_slam{
     }
 
     void Uwb::Run() {
-        ros::Rate loop_rate(10);
-        wheel_odom_sub_=nh_.subscribe("wheel_odom",10,&Uwb::wheel_odomCB,this);
-        imu_sub_=nh_.subscribe("raw_imu",10,&Uwb::imuCB,this);
-        //  try{
-        //     //s_port(io)// 替换成你的串口设备路径
-        //     s_port.open("/dev/ttyUSB0"); 
-        //     s_port.set_option(boost::asio::serial_port_base::baud_rate(115200)); // 设置波特率
-        //     s_port.set_option(boost::asio::serial_port_base::character_size(8)); // 设置数据位
-        //     s_port.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
-        //     //size_t bytesRead = boost::asio::read(s_port, boost::asio::buffer(tmpdata, 13)); // 读取串口数据
-    
-        //  } catch (const std::exception& ex) {
-        // std::cerr << "Exception: " << ex.what() << std::endl;
-        // }
-
+        
         while(1){
         this->Serread();
            // std::cout<<"s"<<std::endl;
@@ -75,7 +61,7 @@ namespace uwb_slam{
         this->uwb_data_.y_ = sinf(theta/180*PI)*distance+1000;
         this->uwb_data_.uwb_t_ = ros::Time::now(); 
         
-        uwb_data_queue_.push(uwb_data_);
+        // uwb_data_queue_.push(uwb_data_);
       
         //std::cout << "PI: " << PI << std::endl;
         cur_seq = static_cast<int>(tmpdata[3]);
@@ -94,37 +80,8 @@ namespace uwb_slam{
 
 
     }
-    void Uwb::wheel_odomCB(const nav_msgs::Odometry& wheel_odom)
-    {
-        imu_odom_.vxy_= wheel_odom.twist.twist.linear.x;
-        imu_odom_.angle_v_ = wheel_odom.twist.twist.angular.z;
-        imu_odom_.pose_[0] = wheel_odom.pose.pose.position.x;
-        imu_odom_.pose_[1] = wheel_odom.pose.pose.position.y;
-        imu_odom_.pose_[2] = wheel_odom.pose.pose.position.z;
-        imu_odom_.quat_[0] = wheel_odom.pose.pose.orientation.x;
-        imu_odom_.quat_[1] = wheel_odom.pose.pose.orientation.y;
-        imu_odom_.quat_[2] = wheel_odom.pose.pose.orientation.z;
-        imu_odom_.quat_[3] = wheel_odom.pose.pose.orientation.w;
     
-        return;
-    }
-    void Uwb::imuCB(const ros_merge_test::RawImu& imu)
-    {
-        imu_odom_.imu_data_.imu_t_ = imu.header.stamp;
-        imu_odom_.imu_data_.a_[0] = imu.raw_linear_acceleration.x;
-        imu_odom_.imu_data_.a_[1] = imu.raw_linear_acceleration.y;
-        imu_odom_.imu_data_.a_[2] = imu.raw_linear_acceleration.z;
-
-        imu_odom_.imu_data_.w_[0] = imu.raw_angular_velocity.x;
-        imu_odom_.imu_data_.w_[1] = imu.raw_angular_velocity.y;
-        imu_odom_.imu_data_.w_[2] = imu.raw_angular_velocity.z;
-
-        return;
-    }
-    void Uwb::align()
-    {
-
-    }
+ 
     void fusion()
     {
 
