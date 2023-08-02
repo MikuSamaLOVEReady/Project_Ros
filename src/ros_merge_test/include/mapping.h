@@ -12,14 +12,14 @@ namespace uwb_slam{
     {
         public:
         const double PIXEL_SCALE = 5.0;
-        const int    AREA_SIZE = 900;
+        const int    AREA_SIZE = 2000;
         Mapping() {};
         void Run();
         bool check_uwb_point();
         void feed_uwb_data(const cv::Point2d & data);
         void process();
         std::mutex mMutexMap;
-        Uwb* uwb_;
+        std::shared_ptr<uwb_slam::Uwb> uwb_;
 
         private:
         std::queue<cv::Point2d> mv_uwb_point_;

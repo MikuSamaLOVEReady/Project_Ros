@@ -1,52 +1,62 @@
-#include <ros/rostime_decl.h>
+#include <ros/ros.h>
+#include <ros/time.h>
+#ifndef TYPE_H
+#define TYPE_H
 
+namespace uwb_slam{
 struct Imu_data
 {
+    ros::Time imu_t_;
     double a_[3];
     double w_[3];
-
-    Imu_data(double a[3],double w[3])
-    : a_{a[0],a[1],a[2]},w_{w[0],w[1],w[2]}{};
+    Imu_data(){};
     Imu_data(double ax,double ay,double az, double wx, double wy, double wz)
     :a_{ax,ay,az},w_{wz,wy,wz}{};
 };
 
 
-// struct Imu_odom_pose_data
-// {
-//     Imu_data imu_data_;
-//     double pose_[3];
-//     double quat_[4];
-//     double timestamp_;
-//     double vx_,vy_;
-//     double angle_v_;
 
-//     imu_odom_pose_data(double pose[3],double quat[4],double vx, double vy, double angle_v, Imu_data imu_data, double t): pose_(a),quat_(w),vx_(vx),vy_(vy),angle_v_(angle_v),imu_data_(Imu_data),timestamp_(t);
-//     imu_odom_pose_data(double x,double y,double z, double qw, double qx, double qy, double qz,double t,double vx, double vy, double angle_v, Imu_data imu_data , double t):pose_({x,y,z}),quat_({qw,qx,qy,qz}),timestamp_(t),vx_(vx),vy_(vy),angle_v_(angle_v),imu_data_(Imu_data);
-// };
-
-struct Odom_data
+struct Imu_odom_pose_data
 {
-    // Imu_data imu_data_;
+    Imu_data imu_data_;
     double pose_[3];
     double quat_[4];
-    ros::Time  timestamp_;
-    double vx_,vy_;
+    double vxy_;
     double angle_v_;
+    Imu_odom_pose_data(){};
+    Imu_odom_pose_data( Imu_data imu_data,double x,double y,double z, double qw, double qx, double qy, double qz,double vxy, double angle_v):imu_data_(imu_data),pose_{x,y,z},quat_{qw,qx,qy,qz},vxy_(vxy),angle_v_(angle_v){};
+};
 
-    /*
-    Odom_data(double pose[3],double quat[4],double t,double vx, double vy, double angle_v)
-    : vx_(vx),vy_(vy),angle_v_(angle_v) , pose_[0]
-    */
+/*struct Odom_data
+{
+    Imu_data imu_data_;
+    ros::Time odom_t_;
+    double pose_[3];
+    double quat_[4];
+    double vxy_,;
+    double angle_v_;
 
     Odom_data(double x,double y,double z,
               double qw, double qx, double qy,double qz,
-              ros::Time t,double vx, double vy, double angle_v)
-    :pose_{x,y,z},quat_{qw,qx,qy,qz},timestamp_(t),vx_(vx),vy_(vy),angle_v_(angle_v){};
+              ros::Time odom_t,double vxy,  double angle_v)
+    :pose_{x,y,z},quat_{qw,qx,qy,qz},odom_t_(odom_t),vxy_(vxy),angle_v_(angle_v){};
 };
-struct Imu_odom_pose_data
+*/
+
+struct  Uwb_data
+{
+    float x_,y_;
+    ros::Time uwb_t_;
+    Uwb_data(){};
+    Uwb_data(float x,float y,float t):x_(x),y_(y),uwb_t_(t){};
+};
+
+/*struct Imu_odom_pose_data
 {
     Imu_data imu_data_;
     Odom_data odom_data;
     Imu_odom_pose_data(Imu_data i_data, Odom_data o_data):imu_data_(i_data),odom_data(o_data){};
 };
+*/
+}
+#endif

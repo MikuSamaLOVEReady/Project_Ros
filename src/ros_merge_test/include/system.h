@@ -16,9 +16,13 @@ namespace uwb_slam{
         }
         void Run();
     public:
-        Mapping* Mapping_;
-        Uwb* Uwb_ ;
-        Senddata* Sender_;
+       
+        std::shared_ptr<uwb_slam::Mapping>Mapping_;
+        std::shared_ptr<uwb_slam::Uwb>Uwb_;
+        std::shared_ptr<uwb_slam::Senddata>Sender_;
+        // Uwb* Uwb_ ;
+        // Senddata* Sender_;
+        // Mapping* Mapping_;
     };
 }
 #endif

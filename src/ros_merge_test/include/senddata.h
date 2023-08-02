@@ -15,15 +15,19 @@ namespace uwb_slam{
     {
         public:
         Senddata(){};
-        void publishOdometry( Uwb* uwb);
-        void Run(Uwb* uwb);
+        void publishOdometry( std::shared_ptr<uwb_slam::Uwb>uwb);
+        void Run(std::shared_ptr<uwb_slam::Uwb>uwb);
+        void odomCB(const nav_msgs::Odometry& odom);
 
 
         std::mutex mMutexSend;
         private:
-        ros::Publisher odom_pub_;
-        ros::NodeHandle nh;
-        nav_msgs::Odometry odom;//odom的消息类型
+        ros::Publisher position_pub_;
+        ros::Subscriber odom_sub_;
+        ros::NodeHandle nh_;
+        nav_msgs::Odometry odom_;//odom的消息类型
+        nav_msgs::Odometry sub_odom_;//odom的消息类型
+
 
       
     };
