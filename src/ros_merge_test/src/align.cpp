@@ -26,9 +26,8 @@ namespace uwb_slam{
 
             int key3 = cv::waitKey(1);
             if(key3 == 'w'){
-            // write_data_ = false;
-            break;
-              }
+                break;
+            }
             if(tmp!=imu_odom_.imu_data_.imu_t_){
                 // outfile <<"imu_odom_: "<< "imu_timestamp  "<<"imu_linear_acc_x_y_z  "<<"imu_angular_x_y_z  "<<
                 // "odom_vxy  "<<"odom_angle_v_  "<<"\n";
@@ -90,7 +89,9 @@ namespace uwb_slam{
         else{
             std::cout<<"file can not open"<<std::endl;
         }
-        }
+        
+    }
+    
     
     
     void Align::wheel_odomCB(const nav_msgs::Odometry& wheel_odom)
