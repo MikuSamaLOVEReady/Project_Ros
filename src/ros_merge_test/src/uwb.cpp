@@ -63,13 +63,13 @@ namespace uwb_slam{
         
         // uwb_data_queue_.push(uwb_data_);
       
-        //std::cout << "PI: " << PI << std::endl;
-        cur_seq = static_cast<int>(tmpdata[3]);
+        //std::cout << "uwb_data_: " << uwb_data_.uwb_t_<< std::endl;
+        // cur_seq = static_cast<int>(tmpdata[3]);
         //std::cout << "****** cur _ sequence: " <<  cur_seq << "x: " << x << " y: " << y <<std::endl;
-        if( cur_seq  - pre_seq != 1){
-            std::cout << "****** cur _ sequence: " << cur_seq << "pre _ sequence: " << pre_seq << " ******\n";
-        }
-        pre_seq = static_cast<int>(tmpdata[3]);
+        // if( cur_seq  - pre_seq != 1){
+        //     std::cout << "****** cur _ sequence: " << cur_seq << "pre _ sequence: " << pre_seq << " ******\n";
+        // }
+        // pre_seq = static_cast<int>(tmpdata[3]);
 
         std::cout << "theta: " << theta << " distance: " << distance << std::endl;
         //std::cout std::endl;

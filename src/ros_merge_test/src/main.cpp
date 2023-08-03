@@ -20,6 +20,8 @@ int main(int argc, char** argv)
     std::shared_ptr<uwb_slam::Mapping>mp = std::make_shared<uwb_slam::Mapping>();
     std::shared_ptr<uwb_slam::Uwb>uwb = std::make_shared<uwb_slam::Uwb>();
     std::shared_ptr<uwb_slam::Senddata>sender = std::make_shared<uwb_slam::Senddata>();
+    std::shared_ptr<uwb_slam::Align>align = std::make_shared<uwb_slam::Align>();
+
     // uwb_slam::System* system = new uwb_slam::System();
     // uwb_slam::Mapping* mp = new uwb_slam::Mapping();
     // uwb_slam::Uwb*  uwb = new uwb_slam::Uwb();
@@ -30,9 +32,11 @@ int main(int argc, char** argv)
     system->Mapping_->uwb_ = uwb;
     system->Uwb_  = uwb;
     system->Sender_ = sender;
+    system->Align_ = align;
     
 
     mp->uwb_ = system->Uwb_;
+    align->uwb_=system->Uwb_;
 
 
     //  control data fllow in system
@@ -44,12 +48,16 @@ int main(int argc, char** argv)
         uwb->Run();
     });
     // build map
-    std::thread map_trd ([&mp]() {
+    /*std::thread map_trd ([&mp]() {
         mp->Run();
-    });
+    });*/
 
     std::thread sender_trd ([&sender, uwb]() {
         sender->Run(uwb);
+    });
+
+    std::thread align_trd ([&align]() {
+        align->Run();
     });
 
     ros::spin(); // Start the ROS node's main loop
