@@ -22,11 +22,14 @@ find_package(Boost REQUIRED)
 # CATKIN_DEPENDS message_runtime std_msgs geometry_msgs
 # )
 
+get_filename_component(DIR_MsgInclude ../../devel/include ABSOLUTE)
+message(STATUS ${DIR_MsgInclude})
 
 include_directories(
 # include
- ${OpenCV_INCLUDE_DIRS}
-  ${catkin_INCLUDE_DIRS}
+ ${OpenCV_INCLUDE_DIRS} 
+ ${catkin_INCLUDE_DIRS}
+ ${DIR_MsgInclude}
         include
 )
 
@@ -35,6 +38,7 @@ add_library(${PROJECT_NAME} SHARED
         src/uwb.cpp
         src/mapping.cpp
         src/align.cpp
+        src/Mat.cpp
         # src/read_sensor_data.cpp
         include/senddata.h src/senddata.cpp)
 

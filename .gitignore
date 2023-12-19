@@ -1,0 +1,6 @@
+.vscode
+build
+src/cmake-build-debug
+src/ros_merge_test/.idea
+src/ros_merge_test/cmake-build-debug
+devel

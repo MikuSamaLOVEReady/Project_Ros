@@ -1,20 +1,22 @@
 #include "senddata.h"
-
+#include "uwb.h"
 
 namespace uwb_slam
 {
-    void Senddata::Run(std::shared_ptr<uwb_slam::Uwb>uwb){
-
-        ros::Rate loop_rate(10);
+    Senddata::Senddata(std::shared_ptr<Uwb> uwb)
+    : nh_() , odom_() , sub_odom_() , msp_Uwb(uwb)
+    {
         position_pub_=nh_.advertise<nav_msgs::Odometry>("uwb_odom",50);
         odom_sub_=nh_.subscribe("odom",10,&Senddata::odomCB,this);
+    }
+
+    void Senddata::Run(){
+        ros::Rate loop_rate(10);
         while(ros::ok()){
-            publishOdometry(uwb);
+            publishOdometry(msp_Uwb);
             ros::spinOnce();
             loop_rate.sleep();
         }
-
-
     }
     void Senddata::odomCB(const nav_msgs::Odometry& odom){
         sub_odom_ = odom;
@@ -33,8 +35,8 @@ namespace uwb_slam
         odom_.child_frame_id = "base_link";  // 设置坐标系为 "base_link"
         
         // 填充 Odometry 消息的位置信息
-        odom_.pose.pose.position.x = uwb->x;
-        odom_.pose.pose.position.y = uwb->y;
+        odom_.pose.pose.position.x = uwb->uwb_data_.x_;
+        odom_.pose.pose.position.y = uwb->uwb_data_.y_;
         odom_.pose.pose.position.z = 0.0;
         
 
@@ -58,7 +60,6 @@ namespace uwb_slam
     }
 
 
-    
 
 
 } // namespace uwb_slam

@@ -8,6 +8,7 @@
 #include "type.h"
 #include "uwb.h"
 #include <opencv2/opencv.hpp>
+#include "Mat.h"
 
 #ifndef ALIGN_H
 #define AlIGN_H
@@ -15,7 +16,11 @@ namespace uwb_slam{
     class Align
     {
     public:
-        Align(){};
+        Align(){
+            imuPos.Init(2,1,0);
+            uwbPos.Init(2,1,0);
+            syncPos.Init(2,1,0);
+        };
         void Run();
         void wheel_odomCB(const nav_msgs::Odometry& wheel_odom);
         void imuCB(const ros_merge_test::RawImu& imu);
@@ -28,8 +33,11 @@ namespace uwb_slam{
         ros::Subscriber odom_sub_;
         Imu_odom_pose_data imu_odom_;
         Uwb_data uwb_data_;
-        ros::Time tmp ;
-
+        ros::Time imuDataRxTime, uwbDataRxTime, odomDataRxTime;
+        bool printFlag;
+        Mat imuPos;
+        Mat uwbPos;
+        Mat syncPos;
         ros::Time odom_tmp_ ;
         bool write_data_ = false;
         cv::Mat img1;

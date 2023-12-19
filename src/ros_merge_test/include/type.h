@@ -18,10 +18,10 @@ struct Imu_data
 
 struct Imu_odom_pose_data
 {
-    Imu_data imu_data_;
-    double pose_[3];
-    double quat_[4];
-    double vxy_;
+    Imu_data imu_data_; // IMU_Callback supply
+    double pose_[3];    // Odom_Callback supply
+    double quat_[4];    // Odom_Callback supply
+    double vxy_;        // wheel_odom Call_back supply
     double angle_v_;
     Imu_odom_pose_data(){};
     Imu_odom_pose_data( Imu_data imu_data,double x,double y,double z, double qw, double qx, double qy, double qz,double vxy, double angle_v):imu_data_(imu_data),pose_{x,y,z},quat_{qw,qx,qy,qz},vxy_(vxy),angle_v_(angle_v){};

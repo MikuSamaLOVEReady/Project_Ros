@@ -3,9 +3,10 @@
 namespace uwb_slam{
     void Align::Run()
     {
-        tmp = ros::Time::now();
-        ros::Time tmp1 = ros::Time::now();
-        ros::Time tmp2 = ros::Time::now();
+        imuDataRxTime = ros::Time::now();
+        uwbDataRxTime = ros::Time::now();
+        ros::Time::now();
+
         wheel_odom_sub_= nh_.subscribe("wheel_odom",10,&Align::wheel_odomCB,this);
         imu_sub_= nh_.subscribe("raw_imu",10,&Align::imuCB,this);
         odom_sub_= nh_.subscribe("odom",10,&Align::odomCB,this);
@@ -13,78 +14,72 @@ namespace uwb_slam{
         std::ofstream outfile("data.txt",std::ofstream::out);
         if(outfile.is_open())
         {
-        img1 = cv::Mat(200, 200, CV_8UC1, cv::Scalar(255,255,255));
-        cv::imshow("Image1",img1);
-        int key2 = cv::waitKey(0);
-        // if(key2 =='w'){
-        //     bool write_data_ = true;
-        // }
-        
-    //    int count=0;
-        // while(write_data_){
-        while(1){
+            std::cout << "!!!" << std::endl;
+            img1 = cv::Mat(200, 200, CV_8UC1, cv::Scalar(255,255,255));
+            cv::imshow("Image1",img1);
+            //int key2 = cv::waitKey(0);
+            Mat prevPos(2, 1, 0);
+            Mat detPos(2, 1, 0);
+            Mat predPos(2, 1, 0);
 
-            int key3 = cv::waitKey(1);
-            if(key3 == 'w'){
-                break;
-            }
-            if(tmp!=imu_odom_.imu_data_.imu_t_){
-                // outfile <<"imu_odom_: "<< "imu_timestamp  "<<"imu_linear_acc_x_y_z  "<<"imu_angular_x_y_z  "<<
-                // "odom_vxy  "<<"odom_angle_v_  "<<"\n";
-                // if(tmp1!=uwb_->uwb_data_.uwb_t_&& tmp2!=odom_tmp_){
-                     outfile << std::left << std::setw(12)<<"imu_odom_: "<< std::setw(10)<< imu_odom_.imu_data_.imu_t_.sec << '.' <<std::setw(11)<< imu_odom_.imu_data_.imu_t_.nsec   << std::setw(11)
-                     <<imu_odom_.imu_data_.a_[0]  << std::setw(11)<<imu_odom_.imu_data_.a_[1]  << std::setw(11)<<imu_odom_.imu_data_.a_[2]  << std::setw(12)
-                     <<imu_odom_.imu_data_.w_[0]  << std::setw(12)<<imu_odom_.imu_data_.w_[1]  << std::setw(12)<<imu_odom_.imu_data_.w_[2]  << std::setw(11)
-                     <<imu_odom_.vxy_  << std::setw(11)<<imu_odom_.angle_v_  << std::setw(7)
-                     <<"   pose: "  << std::setw(1)<<(odom_tmp_-tmp2).sec<<'.'<<std::setw(12)<<(odom_tmp_-tmp2).nsec<<std::setw(11)
-                     <<imu_odom_.pose_[0]  << std::setw(12)<<imu_odom_.pose_[1]  << std::setw(2)<<imu_odom_.pose_[2]  << std::setw(12)
-                     <<imu_odom_.quat_[0]  << std::setw(12)<<imu_odom_.quat_[1]  << std::setw(12)<<imu_odom_.quat_[2]  << std::setw(12)<<imu_odom_.quat_[3]  << std::setw(6)
-                     <<"   uwb: "  << std::setw(1)<<(uwb_->uwb_data_.uwb_t_-tmp1).sec<<'.'<<std::setw(13)<<(uwb_->uwb_data_.uwb_t_-tmp1).nsec   << std::setw(9)
-                     <<uwb_->uwb_data_.x_  << std::setw(9)<<uwb_->uwb_data_.y_<<"\n";
-                     tmp1 = uwb_->uwb_data_.uwb_t_;
-                     tmp2 = odom_tmp_;
-                // }
-            //     else if(tmp1!=uwb_->uwb_data_.uwb_t_){
-            //         outfile <<"imu_odom_: "<< imu_odom_.imu_data_.imu_t_ <<"*"
-            //          <<imu_odom_.imu_data_.a_[0]<<"*"<<imu_odom_.imu_data_.a_[1]<<"*"<<imu_odom_.imu_data_.a_[2]<<"*"
-            //          <<imu_odom_.imu_data_.w_[0]<<"*"<<imu_odom_.imu_data_.w_[1]<<"*"<<imu_odom_.imu_data_.w_[2]<<"*"
-            //          <<imu_odom_.vxy_<<"*"<<imu_odom_.angle_v_<<"*"
-            //          <<"pose: "<<"****************************"
-            //          <<"uwb: "<<uwb_->uwb_data_.uwb_t_<<"*"<<uwb_->uwb_data_.x_<<"*"<<uwb_->uwb_data_.y_<<"\n";
-            //          tmp1 = uwb_->uwb_data_.uwb_t_;
-            //     }
-            //     else if(tmp2!=odom_tmp_){
-            //         outfile <<"imu_odom_: "<< imu_odom_.imu_data_.imu_t_ <<"*"
-            //          <<imu_odom_.imu_data_.a_[0]<<"*"<<imu_odom_.imu_data_.a_[1]<<"*"<<imu_odom_.imu_data_.a_[2]<<"*"
-            //          <<imu_odom_.imu_data_.w_[0]<<"*"<<imu_odom_.imu_data_.w_[1]<<"*"<<imu_odom_.imu_data_.w_[2]<<"*"
-            //          <<imu_odom_.vxy_<<"*"<<imu_odom_.angle_v_<<"*"
-            //          <<"pose: "
-            //          <<imu_odom_.pose_[0]<<"*"<<imu_odom_.pose_[1]<<"*"<<imu_odom_.pose_[2]<<"*"
-            //          <<imu_odom_.quat_[0]<<"*"<<imu_odom_.quat_[1]<<"*"<<imu_odom_.quat_[2]<<"*"<<imu_odom_.quat_[3]<<"*"
-            //          <<"uwb: "<<"****************************"<<"\n";
-            //          tmp2 = odom_tmp_;
+            Mat R(2, 2, 1);
+            Mat Q(2, 2 ,1);
+            Q = Q * 0.001;
+            Mat P(2, 2, 0);
+            Mat F(2, 2, 1);
+            Mat Kg(2, 2, 0);
+            Mat Z(2, 2, 0);
+            Mat H = F;
+            Mat I = F;
+            while(1){
+                int key3 = cv::waitKey(1);
+                if(key3 == 's'){
+                    this->printFlag = 1;
+                } else if (key3 == 'e') {
+                    this->printFlag = 0;
+                }
+                if(imuDataRxTime!=imu_odom_.imu_data_.imu_t_){
+                    imuPos.mat[0][0] = imu_odom_.pose_[0] * 100;
+                    imuPos.mat[1][0] = imu_odom_.pose_[1] * 100;
+                    detPos = imuPos - prevPos;
+                    prevPos = imuPos;
+                    if (uwbDataRxTime != uwb_->uwb_data_.uwb_t_) {
+                        std::cout << "uwb received" << std::endl;
+                        uwbPos.mat[0][0] = uwb_->uwb_data_.x_;
+                        uwbPos.mat[1][0] = uwb_->uwb_data_.y_;
+                        predPos = F * syncPos + detPos;
+                        Z = H * uwbPos;
+                        P = F * P * (~F) + Q;
+                        Kg = P * (~H) / (H * P * (~H) + R);
+                        syncPos = predPos + Kg * (Z - H * predPos);
+                        P = (I - Kg * H) * P;
+                        uwbDataRxTime = uwb_->uwb_data_.uwb_t_;
+                    } else {
+                        syncPos = syncPos + detPos;
+                    }
+                    imuDataRxTime = imu_odom_.imu_data_.imu_t_;
+                    odomDataRxTime = odom_tmp_;
 
-            //    }
-            //    else {
-            //         outfile <<"imu_odom_: "<< imu_odom_.imu_data_.imu_t_ <<"*"
-            //          <<imu_odom_.imu_data_.a_[0]<<"*"<<imu_odom_.imu_data_.a_[1]<<"*"<<imu_odom_.imu_data_.a_[2]<<"*"
-            //          <<imu_odom_.imu_data_.w_[0]<<"*"<<imu_odom_.imu_data_.w_[1]<<"*"<<imu_odom_.imu_data_.w_[2]<<"*"
-            //          <<imu_odom_.vxy_<<"*"<<imu_odom_.angle_v_<<"*"
-            //          <<"pose: "<<"****************************"
-            //          <<"uwb: "<<"****************************"<<"\n";
-            //    }
-                tmp = imu_odom_.imu_data_.imu_t_;
-                    
-                // tmp1 = uwb_->uwb_data_.uwb_t_;
+                    std::cout << "syncPos:" <<syncPos.mat[0][0] << " " << syncPos.mat[1][0];
+                    std::cout << " uwbPos:" <<uwbPos.mat[0][0] << " " << uwbPos.mat[1][0];
+                    std::cout << " imuPos:" <<imuPos.mat[0][0] << " " << imuPos.mat[1][0] << std::endl;
+                    if (printFlag) {
+                        outfile << std::left << std::setw(12)<<"imu_odom_: "<< std::setw(10)<< imu_odom_.imu_data_.imu_t_.sec << '.' <<std::setw(11)<< imu_odom_.imu_data_.imu_t_.nsec   << std::setw(11)
+                        <<imu_odom_.imu_data_.a_[0]  << std::setw(11)<<imu_odom_.imu_data_.a_[1]  << std::setw(11)<<imu_odom_.imu_data_.a_[2]  << std::setw(12)
+                        <<imu_odom_.imu_data_.w_[0]  << std::setw(12)<<imu_odom_.imu_data_.w_[1]  << std::setw(12)<<imu_odom_.imu_data_.w_[2]  << std::setw(11)
+                        <<imu_odom_.vxy_  << std::setw(11)<<imu_odom_.angle_v_  << std::setw(7)
+                        <<"   pose: "  << std::setw(1)<<(odom_tmp_-odomDataRxTime).sec<<'.'<<std::setw(12)<<(odom_tmp_-odomDataRxTime).nsec<<std::setw(11)
+                        <<imu_odom_.pose_[0]  << std::setw(12)<<imu_odom_.pose_[1]  << std::setw(2)<<imu_odom_.pose_[2]  << std::setw(12)
+                        <<imu_odom_.quat_[0]  << std::setw(12)<<imu_odom_.quat_[1]  << std::setw(12)<<imu_odom_.quat_[2]  << std::setw(12)<<imu_odom_.quat_[3]  << std::setw(6)
+                        <<"   uwb: "  << std::setw(1)<<(uwb_->uwb_data_.uwb_t_-uwbDataRxTime).sec<<'.'<<std::setw(13)<<(uwb_->uwb_data_.uwb_t_-uwbDataRxTime).nsec   << std::setw(9)
+                        <<uwb_->uwb_data_.x_  << std::setw(9)<<uwb_->uwb_data_.y_<<"\n";
+                    }
+                }
                 
-                // if(count>300)
-                //     break;
             }
-            
-        }
 
-        outfile.close();
-        std::cout<< "Data written to file." << std::endl;
+            outfile.close();
+            std::cout<< "Data written to file." << std::endl;
         }
         else{
             std::cout<<"file can not open"<<std::endl;

@@ -27,8 +27,12 @@ namespace uwb_slam{
     public:
         int pre_seq = -1;
         int cur_seq = -1;
+        int AnchorNum = 3;
+        int AnchorPos[3][3]={-240, 480, 0,\
+                                240, 480, 0,\
+                                240, -240, 0};//基站坐标，序号+三维坐标
         uint8_t tmpdata[13];
-        float x, y, theta, distance;
+        uint16_t d[3];
      
     // std::queue<Imu_odom_pose_data> v_buffer_imu_odom_pose_data_;
    
