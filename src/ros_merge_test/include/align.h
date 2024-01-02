@@ -1,5 +1,6 @@
 #include <cmath>
 #include <ros/ros.h>
+#include <opencv2/opencv.hpp>
 #include <nav_msgs/Odometry.h>
 #include <utility>
 #include <queue>
@@ -7,7 +8,8 @@
 #include "ros_merge_test/RawImu.h"
 #include "type.h"
 #include "uwb.h"
-#include <opencv2/opencv.hpp>
+#include "lighthouse.h"
+#include "Mat.h"
 
 #ifndef ALIGN_H
 #define AlIGN_H
@@ -15,7 +17,14 @@ namespace uwb_slam{
     class Align
     {
     public:
-        Align(){};
+        Align(){
+            imuPos.Init(2, 1, 0);
+            uwbPos.Init(2, 1, 0);
+            syncPos.Init(2, 1, 0);
+            imuStartPos.Init(2, 1, 0);
+            Rotate.Init(2,2,0);
+            uwbStartPos.Init(2,1,0);
+        };
         void Run();
         void wheel_odomCB(const nav_msgs::Odometry& wheel_odom);
         void imuCB(const ros_merge_test::RawImu& imu);
@@ -28,14 +37,19 @@ namespace uwb_slam{
         ros::Subscriber odom_sub_;
         Imu_odom_pose_data imu_odom_;
         Uwb_data uwb_data_;
-        ros::Time tmp ;
-
+        ros::Time imuDataRxTime, uwbDataRxTime, odomDataRxTime;
+        Mat imuStartPos;
+        Mat imuPos;
+        Mat uwbPos;
+        Mat syncPos;
+        Mat Rotate;
+        Mat uwbStartPos;
         ros::Time odom_tmp_ ;
         bool write_data_ = false;
         cv::Mat img1;
         std::queue<std::pair<Imu_odom_pose_data,Uwb_data>> data_queue;
         std::shared_ptr<uwb_slam::Uwb> uwb_;
-
+        std::shared_ptr<uwb_slam::Lighthouse> lighthouse_;
     };
 };
 #endif

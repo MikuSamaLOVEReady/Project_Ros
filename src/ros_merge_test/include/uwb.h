@@ -10,7 +10,7 @@
 #ifndef UWB_H
 #define UWB_H
 
-
+#define PI acos(-1)
 namespace uwb_slam{
 
     class Uwb
@@ -27,8 +27,12 @@ namespace uwb_slam{
     public:
         int pre_seq = -1;
         int cur_seq = -1;
+        int AnchorNum = 3;
+        int AnchorPos[3][3]={160, -160, 113,\
+                                -480, -160, 113,\
+                                -160, 400, 113};//基站坐标，序号+三维坐标
         uint8_t tmpdata[13];
-        float x, y, theta, distance;
+        int d[3];
      
     // std::queue<Imu_odom_pose_data> v_buffer_imu_odom_pose_data_;
    

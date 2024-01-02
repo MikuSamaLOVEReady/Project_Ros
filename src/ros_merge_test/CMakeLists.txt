@@ -35,6 +35,8 @@ add_library(${PROJECT_NAME} SHARED
         src/uwb.cpp
         src/mapping.cpp
         src/align.cpp
+        src/Mat.cpp
+        src/lighthouse.cpp
         # src/read_sensor_data.cpp
         include/senddata.h src/senddata.cpp)
 

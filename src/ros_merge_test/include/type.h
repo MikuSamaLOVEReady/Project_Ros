@@ -51,6 +51,18 @@ struct  Uwb_data
     Uwb_data(float x,float y,float t):x_(x),y_(y),uwb_t_(t){};
 };
 
+struct LightHouseData
+{
+    float x_,y_,z_;
+    float qw_,qx_,qy_,qz_;
+    ros::Time lighthouse_t_;
+    LightHouseData(){};
+    LightHouseData(float x,float y,float z, float qw, float qx, float qy, float qz, float t):
+        x_(x),y_(y),z_(z),qw_(qw), qx_(qx), qy_(qy), qz_(qz), lighthouse_t_(t){};
+};
+
+
+
 /*struct Imu_odom_pose_data
 {
     Imu_data imu_data_;

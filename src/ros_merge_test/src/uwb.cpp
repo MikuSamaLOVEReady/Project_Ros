@@ -1,16 +1,44 @@
 #include "uwb.h"
 #include <cmath>
+#include "Mat.h"
 
-#define PI acos(-1)
+
+#define CARHEIGHT 20
 
 namespace uwb_slam{
-
+    Mat A;
+    Mat b;
+    Mat uwbPos;
     //
     Uwb::Uwb(){
-            //int pre_seq = -1;
+        for(int i=0; i<3; i++)
+        {
+
+            for(int j=0; j<3; j++)
+            {
+                std::cout<<AnchorPos[i][j]<<" ";
+            }
+            std::cout<<std::endl;
             
-           
+        }
+        A.Init(2,2,0);
+        b.Init(2,1,0);
+        uwbPos.Init(2,1,0);
+        for(int i=0; i<2; i++)
+        {
+            A.mat[i][0] = -2*(this->AnchorPos[0][0]-this->AnchorPos[i+1][0]);
+            A.mat[i][1] = -2*(this->AnchorPos[0][1]-this->AnchorPos[i+1][1]);
         
+        }
+        // for(int i=0; i<2; i++)
+        // {
+        //     for(int j=0; j<2; j++)
+        //     {
+        //         std::cout<<A.mat[i][j]<<" ";
+        //     }
+        //     std::cout<<std::endl;
+        // }
+    
     }
 
     void Uwb::Run() {
@@ -30,10 +58,6 @@ namespace uwb_slam{
 
 
     void Uwb::Serread(){
-        
-      
-
-        
         try {
         boost::asio::io_service io;
         boost::asio::serial_port serial(io, "/dev/ttyUSB0"); // 替换成你的串口设备路径
@@ -43,23 +67,43 @@ namespace uwb_slam{
         serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none)); // 设置校验位
         serial.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one)); // 设置停止位
 
-        uint8_t tmpdata[12];
+        uint8_t tmpdata[9];
         // std::cerr << "befor read" << std::endl;
-        size_t bytesRead = boost::asio::read(serial, boost::asio::buffer(tmpdata, 12)); // 读取串口数据
+        size_t bytesRead = boost::asio::read(serial, boost::asio::buffer(tmpdata, 9)); // 读取串口数据
         // std::cerr << "after read" << std::endl;
-
+        this->uwb_data_.uwb_t_ = ros::Time::now();
+        
         // for (int i=0;i< bytesRead;i++)
         // {
-        //     std::cout << "Received data: " << std::hex<<static_cast<int>(tmpdata[i]) ;
+        //     std::cout << std::hex<<static_cast<int>(tmpdata[i]) << " ";
         // }
-        memcpy(&this->distance, &tmpdata[3], sizeof(distance));
-        memcpy(&this->theta, &tmpdata[7], sizeof(theta));
-        /*this->x = cosf(theta/180*PI)*distance+1000;
-        this->y = sinf(theta/180*PI)*distance+1000;
-        this->theta = theta;*/
-        this->uwb_data_.x_ = cosf(theta/180*PI)*distance+1000;
-        this->uwb_data_.y_ = sinf(theta/180*PI)*distance+1000;
-        this->uwb_data_.uwb_t_ = ros::Time::now(); 
+        // std::cout << std::endl;
+        memcpy(&this->d[0], &tmpdata[3], sizeof(uint16_t));
+        memcpy(&this->d[1], &tmpdata[5], sizeof(uint16_t));
+        memcpy(&this->d[2], &tmpdata[7], sizeof(uint16_t));
+        // std::cout << "d:" << d[0] << " " << d[1] << " " << d[2] << std::endl;
+        if(abs(d[0]) > 2000 || abs(d[1]) > 2000 || abs(d[2]) > 2000) {
+            return;
+        }
+        for(int i=0; i<3; i++)
+        {
+            this->d[i] = sqrt(this->d[i] * this->d[i] - (AnchorPos[i][2] - CARHEIGHT) * (AnchorPos[i][2] - CARHEIGHT));
+        }
+        d[0] = ((((4.9083e-07 * d[0]) - 4.6166e-04) * d[0]) + 1.0789) * d[0] + 5.4539;
+        d[1] = ((((-4.1679e-07 * d[1]) + 5.0999e-04) * d[1]) + 0.7930) * d[1] + 29.8296;
+        d[2] = ((((2.3514e-07 * d[2]) - 1.8277e-04) * d[2]) + 0.9935) * d[2] + 9.8852;
+        for(int i=0; i<2; i++)
+        {
+            b.mat[i][0] = (this->d[0]*this->d[0]-this->d[i+1]*this->d[i+1])\
+                        -(this->AnchorPos[0][0]*this->AnchorPos[0][0]-this->AnchorPos[i+1][0]*this->AnchorPos[i+1][0])\
+                        -(this->AnchorPos[0][1]*this->AnchorPos[0][1]-this->AnchorPos[i+1][1]*this->AnchorPos[i+1][1]);
+        }
+        Mat AT=~A;
+        uwbPos=(AT*A)%AT*b;
+        this->uwb_data_.x_ = uwbPos.mat[0][0];
+        this->uwb_data_.y_ = uwbPos.mat[1][0];
+        //std::cout << "uwbPos:" << this->uwb_data_.x_ << " " << this->uwb_data_.y_ << std::endl;
+         
         
         // uwb_data_queue_.push(uwb_data_);
       
@@ -71,7 +115,7 @@ namespace uwb_slam{
         // }
         // pre_seq = static_cast<int>(tmpdata[3]);
 
-        std::cout << "theta: " << theta << " distance: " << distance << std::endl;
+        // std::cout << "theta: " << theta << " distance: " << distance << std::endl;
         //std::cout std::endl;
     } catch (const std::exception& ex) {
         std::cerr << "Exception: " << ex.what() << std::endl;
@@ -86,6 +130,8 @@ namespace uwb_slam{
     {
 
     }
+
+
 
     
 

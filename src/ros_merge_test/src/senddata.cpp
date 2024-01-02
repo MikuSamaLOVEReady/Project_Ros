@@ -33,8 +33,8 @@ namespace uwb_slam
         odom_.child_frame_id = "base_link";  // 设置坐标系为 "base_link"
         
         // 填充 Odometry 消息的位置信息
-        odom_.pose.pose.position.x = uwb->x;
-        odom_.pose.pose.position.y = uwb->y;
+        odom_.pose.pose.position.x = uwb->uwb_data_.x_;
+        odom_.pose.pose.position.y = uwb->uwb_data_.y_;
         odom_.pose.pose.position.z = 0.0;
         
 
