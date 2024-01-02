@@ -76,6 +76,7 @@ namespace uwb_slam{
                 prevPos = imuPos;
                 if (uwbDataRxTime != uwb_->uwb_data_.uwb_t_) {
                     std::cout << "uwb received" << std::endl;
+                    std_msgs::Float32MultiArray  uwb_msg;
 
                     Rotate.mat[0][0] = cos(roll);
                     Rotate.mat[0][1] = -sin(roll);
@@ -94,6 +95,11 @@ namespace uwb_slam{
                     syncPos = predPos + Kg * (Z - H * predPos);
                     P = (I - Kg * H) * P;
                     uwbDataRxTime = uwb_->uwb_data_.uwb_t_;
+
+                    uwb_msg.data.push_back(  uwbPos.mat[0][0]);
+                    uwb_msg.data.push_back(  uwbPos.mat[1][0]);
+                    uwb_puber.publish(uwb_msg);
+                    ros::spinOnce();
                 } else {
                     syncPos = syncPos + detPos;
                 }

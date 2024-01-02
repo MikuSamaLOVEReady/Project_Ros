@@ -2,6 +2,7 @@
 #include <ros/ros.h>
 #include <opencv2/opencv.hpp>
 #include <nav_msgs/Odometry.h>
+#include "std_msgs/Float32MultiArray.h"
 #include <utility>
 #include <queue>
 #include <fstream>
@@ -24,6 +25,8 @@ namespace uwb_slam{
             imuStartPos.Init(2, 1, 0);
             Rotate.Init(2,2,0);
             uwbStartPos.Init(2,1,0);
+            uwb_puber = nh_.advertise<std_msgs::Float32MultiArray>("uwb_data",10);
+
         };
         void Run();
         void wheel_odomCB(const nav_msgs::Odometry& wheel_odom);
@@ -50,6 +53,7 @@ namespace uwb_slam{
         std::queue<std::pair<Imu_odom_pose_data,Uwb_data>> data_queue;
         std::shared_ptr<uwb_slam::Uwb> uwb_;
         std::shared_ptr<uwb_slam::Lighthouse> lighthouse_;
+        ros::Publisher uwb_puber;
     };
 };
 #endif
