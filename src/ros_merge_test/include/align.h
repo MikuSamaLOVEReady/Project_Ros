@@ -18,7 +18,10 @@ namespace uwb_slam{
     class Align
     {
     public:
-        Align(){
+        Align(std::shared_ptr<Uwb> uwb , std::shared_ptr<Lighthouse> lighthouse)
+        :uwb_(uwb) , lighthouse_(lighthouse)
+        {
+
             imuPos.Init(2, 1, 0);
             uwbPos.Init(2, 1, 0);
             syncPos.Init(2, 1, 0);
@@ -51,8 +54,9 @@ namespace uwb_slam{
         bool write_data_ = false;
         cv::Mat img1;
         std::queue<std::pair<Imu_odom_pose_data,Uwb_data>> data_queue;
-        std::shared_ptr<uwb_slam::Uwb> uwb_;
-        std::shared_ptr<uwb_slam::Lighthouse> lighthouse_;
+
+        std::shared_ptr<Uwb> uwb_;
+        std::shared_ptr<Lighthouse> lighthouse_;
         ros::Publisher uwb_puber;
     };
 };

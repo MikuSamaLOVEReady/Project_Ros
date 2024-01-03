@@ -1,21 +1,23 @@
 #include <thread>
 #include <string>
-#include "mapping.h"
-#include "uwb.h"
-#include "senddata.h"
-// #include "align.h"
 #include <iostream>
 
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
 namespace uwb_slam{
+
+    class Mapping;
+    class Senddata;
+    class Uwb;
+    class Align;
+    class Lighthouse;
+
     class System{
 
     public:
-        System() {
-        }
-        void Run();
+        System();
+
     public:
        
         std::shared_ptr<uwb_slam::Mapping>Mapping_;
@@ -27,6 +29,12 @@ namespace uwb_slam{
         // Uwb* Uwb_ ;
         // Senddata* Sender_;
         // Mapping* Mapping_;
+        std::thread* mp_Mapping;
+        std::thread* mp_Uwb;
+        std::thread* mp_Senddata;
+        std::thread* mp_Align;
+        std::thread* mp_Lighthouse_;
+
     };
 }
 #endif

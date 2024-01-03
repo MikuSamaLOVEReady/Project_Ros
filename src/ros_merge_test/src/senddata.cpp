@@ -3,19 +3,23 @@
 
 namespace uwb_slam
 {
-    void Senddata::Run(std::shared_ptr<uwb_slam::Uwb>uwb){
-
-        ros::Rate loop_rate(10);
+    Senddata::Senddata(std::shared_ptr<Uwb> uwb)
+    : nh_() , msp_Uwb(uwb)
+    {
         position_pub_=nh_.advertise<nav_msgs::Odometry>("uwb_odom",50);
         odom_sub_=nh_.subscribe("odom",10,&Senddata::odomCB,this);
+    }
+
+    void Senddata::Run(){
+
+        ros::Rate loop_rate(10);
         while(ros::ok()){
-            publishOdometry(uwb);
+            publishOdometry(msp_Uwb);
             ros::spinOnce();
             loop_rate.sleep();
         }
-
-
     }
+
     void Senddata::odomCB(const nav_msgs::Odometry& odom){
         sub_odom_ = odom;
         return;
@@ -36,15 +40,6 @@ namespace uwb_slam
         odom_.pose.pose.position.x = uwb->uwb_data_.x_;
         odom_.pose.pose.position.y = uwb->uwb_data_.y_;
         odom_.pose.pose.position.z = 0.0;
-        
-
-        // 填充 Odometry 消息的姿态信息（使用四元数来表示姿态）
-        // tf2::Quaternion quat;
-        // quat.setRPY(0, 0, uwb->theta);  // 设置了 yaw 角度，其他 roll 和 pitch 设置为 0
-        // odom.pose.pose.orientation.x = quat.x();
-        // odom.pose.pose.orientation.y = quat.y();
-        // odom.pose.pose.orientation.z = quat.z();
-        // odom.pose.pose.orientation.w = quat.w();
 
         odom_.pose.pose.orientation.x = sub_odom_.pose.pose.orientation.x;
         odom_.pose.pose.orientation.y = sub_odom_.pose.pose.orientation.y;
@@ -58,7 +53,6 @@ namespace uwb_slam
     }
 
 
-    
 
 
 } // namespace uwb_slam
