@@ -12,6 +12,7 @@
 
 namespace uwb_slam{
 
+    class Uwb;
     class Senddata
     {
         public:
@@ -24,12 +25,18 @@ namespace uwb_slam{
 
         std::mutex mMutexSend;
         private:
+        // subscriber
         ros::Publisher position_pub_;
         ros::Subscriber odom_sub_;
         ros::NodeHandle nh_;
+
+        //publish
         nav_msgs::Odometry odom_;//odom的消息类型
         nav_msgs::Odometry sub_odom_;//odom的消息类型
         std::shared_ptr<Uwb> msp_Uwb;
+
+        std::shared_ptr<Uwb> msp_Uwb;
+
 
 
       

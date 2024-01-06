@@ -26,6 +26,11 @@ namespace uwb_slam{
         mp_Senddata = new std::thread(&Senddata::Run , Sender_);
 
 
+        Mapping_ = std::make_shared<Mapping>(Uwb_);
+        mp_Mapping = new std::thread( &uwb_slam::Mapping::Run, Mapping_);
+
+        Sender_ = std::make_shared<Senddata>(Uwb_);
+        mp_Senddata = new std::thread(&Senddata::Run , Sender_);
     }
 
     

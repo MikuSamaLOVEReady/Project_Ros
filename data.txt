@@ -1,2 +1,0 @@
-imuDataRxTime,odomDataRxTime,uwbDataRxTime,aX,aY,aZ,wX,wY,wZ,qX,qY,qZ,qW,vXY,angleV,imuPosX,imuPosY,uwbPosX,uwbPosY,syncPosX,syncPosY,lightHousePosX,lightHousePosY,lightHousePosZ,d1,d2,d3
-0.000000000,0.000000000,0.000000000,

@@ -22,11 +22,14 @@ find_package(Boost REQUIRED)
 # CATKIN_DEPENDS message_runtime std_msgs geometry_msgs
 # )
 
+get_filename_component(DIR_MsgInclude ../../devel/include ABSOLUTE)
+message(STATUS ${DIR_MsgInclude})
 
 include_directories(
 # include
- ${OpenCV_INCLUDE_DIRS}
-  ${catkin_INCLUDE_DIRS}
+ ${OpenCV_INCLUDE_DIRS} 
+ ${catkin_INCLUDE_DIRS}
+ ${DIR_MsgInclude}
         include
 )
 

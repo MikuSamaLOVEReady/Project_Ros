@@ -124,8 +124,6 @@ namespace uwb_slam{
                         << lighthouse_->data.x_ << "," << lighthouse_->data.y_ << "," << lighthouse_->data.z_ << ","\
                         << uwb_->d[0] << "," << uwb_->d[1] << "," << uwb_->d[2] << "\n";
             }
-            
-        }
 
         // outfile.close();
         // std::cout<< "Data written to file." << std::endl;   
