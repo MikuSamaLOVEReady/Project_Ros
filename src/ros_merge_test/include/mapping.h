@@ -1,6 +1,7 @@
 #include <queue>
 #include <opencv2/opencv.hpp>
 #include <mutex>
+#include <memory>
 
 
 #ifndef MAPPING_H
