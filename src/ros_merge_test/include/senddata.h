@@ -34,11 +34,6 @@ namespace uwb_slam{
         nav_msgs::Odometry odom_;//odom的消息类型
         nav_msgs::Odometry sub_odom_;//odom的消息类型
         std::shared_ptr<Uwb> msp_Uwb;
-
-        std::shared_ptr<Uwb> msp_Uwb;
-
-
-
       
     };
 
